@@ -132,8 +132,8 @@ AI Model Evaluation & Improvement
 ## Clone Repository
 
 ```bash
-git clone https://github.com/Kornblith-Lab/reviewer-interface.git
-cd reviewer-interface
+git clone https://github.com/Kornblith-Lab/emr_histories.git
+cd emr_histories
 ```
 
 ## Run with Docker
