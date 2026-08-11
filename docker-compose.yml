@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+    ports:
+     - "8000:8000"
+    networks:
+      - app-network
+    restart: unless-stopped
+    develop:
+      watch:
+        # Rebuild when dependencies change
+        - action: rebuild
+          path: ./backend/requirements.txt
+        # Sync the CSV and Python files dynamically without a complete container rebuild
+        - action: sync
+          path: ./backend
+          target: /app
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3000"
+    depends_on:
+      - backend
+    networks:
+      - app-network
+    restart: unless-stopped
+    develop:
+      watch:
+        # Sync frontend source for hot reload
+        - action: sync
+          path: ./frontend/src
+          target: /app/src
+        - action: sync
+          path: ./frontend/public
+          target: /app/public
+        # Rebuild when dependencies change
+        - action: rebuild
+          path: ./frontend/package.json
+
+networks:
+  app-network:
+    driver: bridge
